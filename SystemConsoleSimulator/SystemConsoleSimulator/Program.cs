@@ -15,7 +15,7 @@ namespace SystemConsoleSimulator
             string Command = string.Empty;
 
         InputCommand:
-            Console.Write(CreateStartString.MainString(Environment.UserName, Environment.MachineName, CurrentDirectoryValues.CurrentDirectory));
+            Console.Write(CreateStartString.MainString(Environment.UserName, Environment.MachineName, CurrentDirectoryValues.ShowCurrentDirectory()));
             Command = Console.ReadLine();
 
             string[] CommandWords = Command.Split(' ');
@@ -24,7 +24,7 @@ namespace SystemConsoleSimulator
             goto InputCommand;
 
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }

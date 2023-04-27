@@ -39,6 +39,12 @@ namespace SystemConsoleSimulator
                 case "pwd":
                     CommandPwd(Parameters);
                     break;
+                case "cd":
+                    CommandCd(Parameters);
+                    break;
+                case "date":
+                    CommandDate(Parameters);
+                    break;
                 default:
                     Console.WriteLine("command not found");
                     break;
@@ -63,6 +69,39 @@ namespace SystemConsoleSimulator
                 case "ls":
                     Console.WriteLine(Man.LS);
                     break;
+                case "pwd":
+                    Console.WriteLine(Man.PWD);
+                    break;
+                case "cd":
+                    Console.WriteLine(Man.CD);
+                    break;
+                case "mkdir":
+                    Console.WriteLine(Man.MKDIR);
+                    break;
+                case "cat":
+                    Console.WriteLine(Man.CAT);
+                    break;
+                case "touch":
+                    Console.WriteLine(Man.TOUCH);
+                    break;
+                case "exit":
+                    Console.WriteLine(Man.EXIT);
+                    break;
+                case "rm":
+                    Console.WriteLine(Man.RM);
+                    break;
+                case "head":
+                    Console.WriteLine(Man.HEAD);
+                    break;
+                case "date":
+                    Console.WriteLine(Man.DATE);
+                    break;
+                case "arch":
+                    Console.WriteLine(Man.ARCH);
+                    break;
+                case "clear":
+                    Console.WriteLine(Man.CLEAR);
+                    break;
             }
         }
 
@@ -77,7 +116,7 @@ namespace SystemConsoleSimulator
 
             if (parameters == null)
             {
-                CurrentDirectory = Directory.GetCurrentDirectory();
+                CurrentDirectory = CurrentDirectoryValues.CurrentDirectory;
                 OutputLs(CurrentDirectory);
                 return;
             }
@@ -138,7 +177,7 @@ namespace SystemConsoleSimulator
                 AllFiles = Directory.GetFiles(_currentdirectory);
                 AllDir = Directory.GetDirectories(_currentdirectory);
             }
-            catch(DirectoryNotFoundException DNFEx)
+            catch(DirectoryNotFoundException)
             {
                 Console.WriteLine("Directory not found\nTry changing the path");
             }
@@ -159,8 +198,35 @@ namespace SystemConsoleSimulator
 
         private void CommandPwd(string[] parameters)
         {
-            if(CurrentDirectoryValues.CurrentDirectory != "~") Console.WriteLine(CurrentDirectoryValues.CurrentDirectory);
-            Console.WriteLine(Directory.GetCurrentDirectory());
+            Console.WriteLine(CurrentDirectoryValues.CurrentDirectory);
+        }
+
+        #endregion
+
+        #region Cd
+
+        private void CommandCd(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                CurrentDirectoryValues.CurrentDirectory = Directory.GetCurrentDirectory().Substring(0, 3);
+                return;
+            }
+            CurrentDirectoryValues.CurrentDirectory += parameters[0];
+        }
+
+        #endregion
+
+        #region Date
+
+        private void CommandDate(string[] parameters)
+        {
+            string DayWeek = DateTime.Now.DayOfWeek.ToString().Substring(0, 3);
+            int Month = Convert.ToInt32(DateTime.Now.Month);
+            string[] m = { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            string Time = DateTime.Now.ToLongTimeString();
+            string Year = DateTime.Now.Year.ToString();
+            Console.WriteLine($"{DayWeek} {m[Month]} {Time} {Year}");
         }
 
         #endregion
