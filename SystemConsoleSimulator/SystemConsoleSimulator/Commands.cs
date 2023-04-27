@@ -36,6 +36,9 @@ namespace SystemConsoleSimulator
                 case "ls":
                     CommandLs(Parameters);
                     break;
+                case "pwd":
+                    CommandPwd(Parameters);
+                    break;
                 default:
                     Console.WriteLine("command not found");
                     break;
@@ -148,6 +151,16 @@ namespace SystemConsoleSimulator
             {
                 Console.WriteLine(AllFiles[i].Substring(_currentdirectory.Length));
             }
+        }
+
+        #endregion
+
+        #region Pwd
+
+        private void CommandPwd(string[] parameters)
+        {
+            if(CurrentDirectoryValues.CurrentDirectory != "~") Console.WriteLine(CurrentDirectoryValues.CurrentDirectory);
+            Console.WriteLine(Directory.GetCurrentDirectory());
         }
 
         #endregion
