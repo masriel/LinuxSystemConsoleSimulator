@@ -45,6 +45,15 @@ namespace SystemConsoleSimulator
                 case "date":
                     CommandDate(Parameters);
                     break;
+                case "mkdir":
+                    CommandMkdir(Parameters);
+                    break;
+                case "rmdir":
+                    CommandRmdir(Parameters);
+                    break;
+                case "touch":
+                    CommandTouch(Parameters);
+                    break;
                 default:
                     Console.WriteLine("command not found");
                     break;
@@ -212,7 +221,7 @@ namespace SystemConsoleSimulator
                 CurrentDirectoryValues.CurrentDirectory = Directory.GetCurrentDirectory().Substring(0, 3);
                 return;
             }
-            CurrentDirectoryValues.CurrentDirectory += parameters[0];
+            CurrentDirectoryValues.CurrentDirectory += $@"{parameters[0]}\";
         }
 
         #endregion
@@ -227,6 +236,71 @@ namespace SystemConsoleSimulator
             string Time = DateTime.Now.ToLongTimeString();
             string Year = DateTime.Now.Year.ToString();
             Console.WriteLine($"{DayWeek} {m[Month]} {Time} {Year}");
+        }
+
+        #endregion
+
+        #region Mkdir
+
+        private void CommandMkdir(string[] parameters)
+        {
+            if(parameters == null)
+            {
+                Console.WriteLine("mkdir: missing operand");
+                return;
+            }
+            if (parameters.Length == 1)
+            {
+                Directory.CreateDirectory($"{CurrentDirectoryValues.CurrentDirectory}{parameters[0]}");
+            }
+            else
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    Directory.CreateDirectory($"{CurrentDirectoryValues.CurrentDirectory}{parameters[i]}");
+                }
+            }
+        }
+
+        #endregion
+
+        #region Rmdir
+
+        private void CommandRmdir(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                Console.WriteLine("rmdir: missing operand");
+                return;
+            }
+
+            if (Directory.GetDirectories($"{CurrentDirectoryValues.CurrentDirectory}{parameters[0]}").Length + Directory.GetFiles($"{CurrentDirectoryValues.CurrentDirectory}{parameters[0]}").Length > 0)
+            {
+                Console.WriteLine("Directory not empty");
+                return;
+            }
+
+            Directory.Delete($"{CurrentDirectoryValues.CurrentDirectory}{parameters[0]}");
+        }
+
+        #endregion
+
+        #region Cat
+        #endregion
+
+        #region Touch
+
+        private void CommandTouch(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                Console.WriteLine("touch: missing file operand");
+                return;
+            }
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                File.Create($"{CurrentDirectoryValues.CurrentDirectory}{parameters[i]}");
+            }
         }
 
         #endregion
