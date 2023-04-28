@@ -54,6 +54,18 @@ namespace SystemConsoleSimulator
                 case "touch":
                     CommandTouch(Parameters);
                     break;
+                case "clear":
+                    CommandClear(Parameters);
+                    break;
+                case "arch":
+                    CommandArch(Parameters);
+                    break;
+                case "exit":
+                    CommandExit(Parameters);
+                    break;
+                case "rm":
+                    CommandExit(Parameters);
+                    break;
                 default:
                     Console.WriteLine("command not found");
                     break;
@@ -218,7 +230,12 @@ namespace SystemConsoleSimulator
         {
             if (parameters == null)
             {
-                CurrentDirectoryValues.CurrentDirectory = Directory.GetCurrentDirectory().Substring(0, 3);
+                CurrentDirectoryValues.CurrentDirectory = Directory.GetDirectoryRoot(Directory.GetCurrentDirectory());
+                return;
+            }
+            if (CurrentDirectoryValues.CurrentDirectory.Contains(parameters[0]))
+            {
+                CurrentDirectoryValues.CurrentDirectory = parameters[0];
                 return;
             }
             CurrentDirectoryValues.CurrentDirectory += $@"{parameters[0]}\";
@@ -286,6 +303,12 @@ namespace SystemConsoleSimulator
         #endregion
 
         #region Cat
+
+        private void CommandCat(string[] parameters)
+        {
+
+        }
+
         #endregion
 
         #region Touch
@@ -301,6 +324,51 @@ namespace SystemConsoleSimulator
             {
                 File.Create($"{CurrentDirectoryValues.CurrentDirectory}{parameters[i]}");
             }
+        }
+
+        #endregion
+
+        #region Clear
+
+        private void CommandClear(string[] parameters)
+        {
+            Console.Clear();
+        }
+
+        #endregion
+
+        #region Arch
+
+        private void CommandArch(string[] parameters)
+        {
+            Console.WriteLine(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"));
+        }
+
+        #endregion
+
+        #region Head
+
+        private void CommandHead(string[] parameters)
+        {
+
+        }
+
+        #endregion
+
+        #region Exit
+
+        private void CommandExit(string[] parameters)
+        {
+            Environment.Exit(0);
+        }
+
+        #endregion
+
+        #region Rm
+
+        private void CommandRm(string[] parameters)
+        {
+
         }
 
         #endregion

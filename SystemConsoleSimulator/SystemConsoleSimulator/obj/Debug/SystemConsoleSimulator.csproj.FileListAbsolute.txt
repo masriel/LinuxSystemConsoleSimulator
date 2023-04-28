@@ -5,3 +5,10 @@ D:\Muhina\практика\1 week\SystemConsoleSimulator\SystemConsoleSimulator\
 D:\Muhina\практика\1 week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.csproj.CoreCompileInputs.cache
 D:\Muhina\практика\1 week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.exe
 D:\Muhina\практика\1 week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.pdb
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\bin\Debug\SystemConsoleSimulator.exe.config
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\bin\Debug\SystemConsoleSimulator.exe
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\bin\Debug\SystemConsoleSimulator.pdb
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.csproj.AssemblyReference.cache
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.csproj.CoreCompileInputs.cache
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.exe
+D:\Muhina\практика\1week\SystemConsoleSimulator\SystemConsoleSimulator\obj\Debug\SystemConsoleSimulator.pdb

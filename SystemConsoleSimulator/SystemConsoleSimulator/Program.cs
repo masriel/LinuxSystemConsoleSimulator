@@ -11,6 +11,7 @@ namespace SystemConsoleSimulator
         static void Main(string[] args)
         {
             //Команды man, ls, pwd, cd, mkdir, rmdir, cat, touch, exit, rm, head, date, arch, clear
+            //Команды ps, du, df, wc, kill, tail, uname, cp
 
             string Command = string.Empty;
 
