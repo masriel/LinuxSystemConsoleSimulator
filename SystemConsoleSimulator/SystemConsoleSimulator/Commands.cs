@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Security;
 
 namespace SystemConsoleSimulator
 {
@@ -65,6 +66,18 @@ namespace SystemConsoleSimulator
                     break;
                 case "rm":
                     CommandExit(Parameters);
+                    break;
+                case "df":
+                    CommandDf(Parameters);
+                    break;
+                case "du":
+                    CommandDu(Parameters);
+                    break;
+                case "uname":
+                    CommandUname(Parameters);
+                    break;
+                case "pwgen":
+                    CommandPwgen(Parameters);
                     break;
                 default:
                     Console.WriteLine("command not found");
@@ -128,7 +141,7 @@ namespace SystemConsoleSimulator
 
         #endregion
 
-        #region Ls
+        #region Ls (/, -X)
 
         private void CommandLs(string[] parameters)
         {
@@ -219,7 +232,16 @@ namespace SystemConsoleSimulator
 
         private void CommandPwd(string[] parameters)
         {
-            Console.WriteLine(CurrentDirectoryValues.CurrentDirectory);
+            if (parameters == null) 
+            { 
+                Console.WriteLine(CurrentDirectoryValues.CurrentDirectory);
+                return;
+            }
+            if (parameters[0] == "--help")
+            {
+                Console.WriteLine("Options:\n\t-L\tprint the value of $PWD if it names the current working directory\n\t-P\tprint the physical directory, without any symbolic links");
+                return;
+            }
         }
 
         #endregion
@@ -369,6 +391,67 @@ namespace SystemConsoleSimulator
         private void CommandRm(string[] parameters)
         {
 
+        }
+
+        #endregion
+
+        #region Df
+
+        private void CommandDf(string[] parameters)
+        {
+            DriveInfo[] drive = DriveInfo.GetDrives();
+            Console.WriteLine(drive[1].TotalFreeSpace + " bytes");
+        }
+
+        #endregion
+
+        #region Du
+
+        private void CommandDu(string[] parameters)
+        {
+            DriveInfo[] drive = DriveInfo.GetDrives();
+            Console.WriteLine((drive[1].TotalSize - drive[1].TotalFreeSpace) + " bytes");
+        }
+
+        #endregion
+
+        #region Uname
+
+        private void CommandUname(string[] parameters)
+        {
+            Console.WriteLine("Windows :)");
+        }
+
+        #endregion
+
+        #region Pwgen
+
+        private void CommandPwgen(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                string[] pwd = new string[64];
+                for (int i = 0; i < 64; i++)
+                {
+                    pwd[i] = Membership.GeneratePassword(8, 2);
+                }
+
+                int count = 0;
+                for (int i = 0; i < pwd.Length; i++)
+                {
+                    count++;
+                    if (count == 8)
+                    {
+                        Console.WriteLine(pwd[i]);
+                        count = 0;
+                    }
+                    else Console.Write(pwd[i] + " ");
+                                                     
+                }
+                return;
+            }
+
+            if (parameters[0] == "-1") Console.WriteLine(Membership.GeneratePassword(8, 2));
         }
 
         #endregion
