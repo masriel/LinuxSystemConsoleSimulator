@@ -11,7 +11,7 @@ namespace SystemConsoleSimulator
         
         public static string MainString(string User, string PC, string CurDir)
         {
-            string result = $"[{User}@{PC} {CurDir}]# ";
+            string result = $"{User}@{PC}:{CurDir}$ ";
             return result;
         }
     }
