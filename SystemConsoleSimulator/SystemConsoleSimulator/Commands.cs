@@ -1,27 +1,24 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Security;
 
 namespace SystemConsoleSimulator
 {
     class Commands
     {
-        public string CommandName = string.Empty;
-        public string[] Parameters;
+        private readonly string _commandName;
+        private readonly string[] _parameters;
 
-        public Commands(string[] _commandwords)
+        public Commands(string[] commandwords)
         {
-            CommandName = _commandwords[0];
-            if(_commandwords.Length != 1)
+            _commandName = commandwords[0];
+            if(commandwords.Length != 1)
             {
-                Parameters = new string[_commandwords.Length - 1];
-                for (int i = 0; i < Parameters.Length; i++)
+                _parameters = new string[commandwords.Length - 1];
+                for (int i = 0; i < _parameters.Length; i++)
                 {
-                    Parameters[i] = _commandwords[i + 1];
+                    _parameters[i] = commandwords[i + 1];
                 }
             }
             WhichCommand();
@@ -29,55 +26,58 @@ namespace SystemConsoleSimulator
 
         private void WhichCommand()
         {
-            switch (CommandName)
+            switch (_commandName)
             {
                 case "man":
-                    CommandMan(Parameters);
+                    CommandMan(_parameters);
                     break;
                 case "ls":
-                    CommandLs(Parameters);
+                    CommandLs(_parameters);
                     break;
                 case "pwd":
-                    CommandPwd(Parameters);
+                    CommandPwd(_parameters);
                     break;
                 case "cd":
-                    CommandCd(Parameters);
+                    CommandCd(_parameters);
                     break;
                 case "date":
-                    CommandDate(Parameters);
+                    CommandDate(_parameters);
                     break;
                 case "mkdir":
-                    CommandMkdir(Parameters);
+                    CommandMkdir(_parameters);
                     break;
                 case "rmdir":
-                    CommandRmdir(Parameters);
+                    CommandRmdir(_parameters);
                     break;
                 case "touch":
-                    CommandTouch(Parameters);
+                    CommandTouch(_parameters);
                     break;
                 case "clear":
-                    CommandClear(Parameters);
+                    CommandClear(_parameters);
                     break;
                 case "arch":
-                    CommandArch(Parameters);
+                    CommandArch(_parameters);
                     break;
                 case "exit":
-                    CommandExit(Parameters);
-                    break;
-                case "rm":
-                    CommandExit(Parameters);
+                    CommandExit(_parameters);
                     break;
                 case "df":
-                    CommandDf(Parameters);
+                    CommandDf(_parameters);
                     break;
                 case "du":
-                    CommandDu(Parameters);
+                    CommandDu(_parameters);
                     break;
                 case "uname":
-                    CommandUname(Parameters);
+                    CommandUname(_parameters);
                     break;
                 case "pwgen":
-                    CommandPwgen(Parameters);
+                    CommandPwgen(_parameters);
+                    break;
+                case "cat":
+                    CommandCat(_parameters);
+                    break;
+                case "rm":
+                    CommandRm(_parameters);
                     break;
                 default:
                     Console.WriteLine("command not found");
@@ -89,12 +89,17 @@ namespace SystemConsoleSimulator
 
         private void CommandMan(string[] parameters)
         {
-            parameters = Parameters;
-            string com = string.Empty;
+            parameters = _parameters;
+            string com;
 
             if (parameters == null)
             {
                 Console.WriteLine("What manual page do you want?\nFor example, try 'man man'.");
+                return;
+            }
+            if (parameters[0] == "--help")
+            {
+                Console.WriteLine("Usage: man [OPTION...] [SECTION] PAGE...\nOptions:\n\t\tprint the value of $PWD if it names the current working directory\n\t-P\tprint the physical directory, without any symbolic links");
                 return;
             }
             com = parameters[0];
@@ -145,23 +150,23 @@ namespace SystemConsoleSimulator
 
         private void CommandLs(string[] parameters)
         {
-            parameters = Parameters;
-            string CurrentDirectory = string.Empty; ;
+            parameters = _parameters;
+            string currentDirectory;
 
             if (parameters == null)
             {
-                CurrentDirectory = CurrentDirectoryValues.CurrentDirectory;
-                OutputLs(CurrentDirectory);
+                currentDirectory = CurrentDirectoryValues.CurrentDirectory;
+                OutputLs(currentDirectory);
                 return;
             }
 
-            //вывод корневого каталога
+            /*//вывод корневого каталога
             if (parameters[0] == "/")
             {
-                CurrentDirectory = Directory.GetCurrentDirectory().Substring(0, 3);
-                OutputLs(CurrentDirectory);
+                currentDirectory = Directory.GetCurrentDirectory().Substring(0, 3);
+                OutputLs(currentDirectory);
                 return;
-            }
+            }*/
 
             //сортировка по алфавиту
             string par = string.Empty;
@@ -172,63 +177,63 @@ namespace SystemConsoleSimulator
             
             if (par.Contains("-X"))
             {
-                if (parameters[0] != "-X") CurrentDirectory = parameters[0];
-                else CurrentDirectory = Directory.GetCurrentDirectory();
+                if (parameters[0] != "-X") currentDirectory = parameters[0];
+                else currentDirectory = CurrentDirectoryValues.CurrentDirectory;
 
-                string[] AllFiles = { };
-                string[] AllDir = { };
+                string[] allFiles = { };
+                string[] allDir = { };
                 try
                 {
-                    AllFiles = Directory.GetFiles(CurrentDirectory);
-                    AllDir = Directory.GetDirectories(CurrentDirectory);
+                    allFiles = Directory.GetFiles(currentDirectory);
+                    allDir = Directory.GetDirectories(currentDirectory);
                 }
                 catch (DirectoryNotFoundException)
                 {
                     Console.WriteLine("Directory not found\nTry changing the path");
                 }
 
-                AllDir = AllDir.Concat(AllFiles).ToArray();
-                Array.Sort(AllDir);
+                allDir = allDir.Concat(allFiles).ToArray();
+                Array.Sort(allDir);
 
-                for (int i = 0; i < AllDir.Length; i++)
+                for (int i = 0; i < allDir.Length; i++)
                 {
-                    Console.WriteLine(AllDir[i].Substring(CurrentDirectory.Length));
+                    Console.WriteLine(allDir[i].Substring(currentDirectory.Length));
                 }
                 return;
             }
 
             //вывод введенной директории
-            CurrentDirectory = parameters[0] + "/";
-            OutputLs(CurrentDirectory);
+            currentDirectory = parameters[0] + "/";
+            OutputLs(currentDirectory);
         }
 
-        private void OutputLs(string _currentdirectory)
+        private void OutputLs(string currentdirectory)
         {
-            string[] AllFiles = { };
-            string[] AllDir = { };
+            string[] allFiles = { };
+            string[] allDir = { };
             try
             {
-                AllFiles = Directory.GetFiles(_currentdirectory);
-                AllDir = Directory.GetDirectories(_currentdirectory);
+                allFiles = Directory.GetFiles(currentdirectory);
+                allDir = Directory.GetDirectories(currentdirectory);
             }
             catch(DirectoryNotFoundException)
             {
                 Console.WriteLine("Directory not found\nTry changing the path");
             }
 
-            for (int i = 0; i < AllDir.Length; i++)
+            for (int i = 0; i < allDir.Length; i++)
             {
-                Console.WriteLine(AllDir[i].Substring(_currentdirectory.Length));
+                Console.WriteLine(allDir[i].Substring(currentdirectory.Length));
             }
-            for (int i = 0; i < AllFiles.Length; i++)
+            for (int i = 0; i < allFiles.Length; i++)
             {
-                Console.WriteLine(AllFiles[i].Substring(_currentdirectory.Length));
+                Console.WriteLine(allFiles[i].Substring(currentdirectory.Length));
             }
         }
 
         #endregion
 
-        #region Pwd
+        #region Pwd ()
 
         private void CommandPwd(string[] parameters)
         {
@@ -239,8 +244,7 @@ namespace SystemConsoleSimulator
             }
             if (parameters[0] == "--help")
             {
-                Console.WriteLine("Options:\n\t-L\tprint the value of $PWD if it names the current working directory\n\t-P\tprint the physical directory, without any symbolic links");
-                return;
+                Console.WriteLine("pwd: pwd [-LP]\n\tPrint the name of the current working directory.\nOptions:\n\t-L\tprint the value of $PWD if it names the current working directory\n\t-P\tprint the physical directory, without any symbolic links");
             }
         }
 
@@ -269,12 +273,12 @@ namespace SystemConsoleSimulator
 
         private void CommandDate(string[] parameters)
         {
-            string DayWeek = DateTime.Now.DayOfWeek.ToString().Substring(0, 3);
-            int Month = Convert.ToInt32(DateTime.Now.Month);
+            string dayWeek = DateTime.Now.DayOfWeek.ToString().Substring(0, 3);
+            int month = Convert.ToInt32(DateTime.Now.Month);
             string[] m = { "", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-            string Time = DateTime.Now.ToLongTimeString();
-            string Year = DateTime.Now.Year.ToString();
-            Console.WriteLine($"{DayWeek} {m[Month]} {Time} {Year}");
+            string time = DateTime.Now.ToLongTimeString();
+            string year = DateTime.Now.Year.ToString();
+            Console.WriteLine($"{dayWeek} {m[month]} {time} {year}");
         }
 
         #endregion
@@ -328,7 +332,16 @@ namespace SystemConsoleSimulator
 
         private void CommandCat(string[] parameters)
         {
-
+            if (parameters == null)
+            {
+                Console.WriteLine("file not found");
+                return;
+            }
+            using(StreamReader reader = new StreamReader($@"{CurrentDirectoryValues.CurrentDirectory}{parameters[0]}.txt"))
+            {
+                while(!(reader.EndOfStream))
+                    Console.WriteLine(reader.ReadLine());
+            }
         }
 
         #endregion
@@ -390,7 +403,12 @@ namespace SystemConsoleSimulator
 
         private void CommandRm(string[] parameters)
         {
-
+            if (parameters == null)
+            {
+                Console.WriteLine("rm: missing operand");
+                return;
+            }
+            File.Delete(parameters[0] + ".txt");
         }
 
         #endregion
@@ -419,12 +437,12 @@ namespace SystemConsoleSimulator
 
         private void CommandUname(string[] parameters)
         {
-            Console.WriteLine("Windows :)");
+            Console.WriteLine("Windows");
         }
 
         #endregion
 
-        #region Pwgen
+        #region Pwgen (-1)
 
         private void CommandPwgen(string[] parameters)
         {
